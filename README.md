@@ -1,4 +1,4 @@
-# README_context.md
+# README.md
 
 # MESS: Multiproposal Elliptical Slice Sampling
 
