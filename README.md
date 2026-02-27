@@ -2,7 +2,7 @@
 
 # MESS: Multiproposal Elliptical Slice Sampling
 
-This repository implements Elliptical Slice Sampling (ESS) and its multiproposal generalization (MESS) for Bayesian inference in models with Gaussian priors. It accompanies the pre-print "Multproposal Elliptical Slice Sampling" by Senn et al. (2026).
+This repository accompanies the pre-print ["Multproposal Elliptical Slice Sampling"](https://arxiv.org/abs/2602.22358).
 
 ---
 
