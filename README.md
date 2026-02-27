@@ -10,7 +10,7 @@ This repository accompanies the pre-print ["Multproposal Elliptical Slice Sampli
 
 ### ESS and MESS
 
-- ESS is recovered by setting M = 1.
+- Elliptical Slice Sampling (ESS) is recovered by setting M = 1.
 - MESS proposes M candidate angles per subiteration and accepts one uniformly or based on a transition matrix.
 - All algorithms require: sampling from a Gaussian prior and evaluating a log-likelihood.
 
