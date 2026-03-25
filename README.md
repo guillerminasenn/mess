@@ -2,7 +2,7 @@
 
 # MESS: Multiproposal Elliptical Slice Sampling
 
-This repository implements Elliptical Slice Sampling (ESS) and its multiproposal generalization (MESS) for Bayesian inference in models with Gaussian priors. It accompanies the pre-print "Multproposal Elliptical Slice Sampling" by Senn et al. (2026).
+This repository implements Elliptical Slice Sampling (ESS) and its multiproposal generalization (MESS) for Bayesian inference in models with Gaussian priors. It accompanies the pre-print [Multiproposal Elliptical Slice Sampling](https://arxiv.org/abs/2602.22358) by Senn et al. (2026).
 
 ---
 
@@ -10,8 +10,8 @@ This repository implements Elliptical Slice Sampling (ESS) and its multiproposal
 
 ### ESS and MESS
 
-- ESS is recovered by setting M = 1.
-- MESS proposes M candidate angles per subiteration and accepts one uniformly or based on a transition matrix.
+- MESS proposes $M$ candidate angles per subiteration and accepts one uniformly or based on a transition matrix.
+- ESS is recovered by setting $M=1$.
 - All algorithms require: sampling from a Gaussian prior and evaluating a log-likelihood.
 
 ---
@@ -29,15 +29,20 @@ This repository implements Elliptical Slice Sampling (ESS) and its multiproposal
    - All problems inherit from GaussianPriorProblem.
    - Gaussian sampling is performed via Cholesky decomposition.
 
+4. Parallelization is user-defined
+    - The provided MESS algorithm is better suited to toy problems where likelihood costs are cheap and parallel overhead dominates.
+    - For larger problems, users can parallelize the per-proposal likelihood evaluation and distance measurement.
+    - Parallelization is not implemented to allow users choose the best strategy for their infrastructure. It should however be a straightforward programming task. 
+
 ---
 
 ## Repository structure
 
 ### src/mess/algorithms
 
-- ess.py: ESS (equivalent to MESS with M = 1)
+- ess.py: ESS (equivalent to MESS with $M=1$)
 - mess.py: MESS with optional LP-based transition matrices
-- utils.py: angle sampling, bracket logic, and helper routines
+- utils.py: angle sampling, shrinking logic, and helper routines
 
 ### src/mess/problems
 
@@ -71,13 +76,13 @@ The notebooks/ directory reproduces the experiments and figures used in the pape
 
 ---
 
-## Typical usage
+## Typical usage (for GP regression example)
 
 ```python
 import numpy as np
 from mess.data.gp_regression import generate_gp_regression_data
 from mess.problems.gp_regression import GaussianProcessRegression
-from mess.algorithms.ess import ess_step
+from mess.algorithms.ess import mess_step
 
 data = generate_gp_regression_data(seed=0)
 problem = GaussianProcessRegression(
@@ -89,6 +94,26 @@ problem = GaussianProcessRegression(
 
 x = data["f_init"]
 rng = np.random.default_rng(0)
+
+# To run ESS (MESS with M=1)
 for _ in range(1000):
     x, _, _ = ess_step(x, problem, rng)
+
+# To run MESS (Uniform probabilities in acceptance step)
+for _ in range(1000):
+    x, _, _ = mess_step(x, problem, rng, M=M, use_lp=False)
+
+# To run MESS (Distance-informed transition matrix)
+for _ in range(1000):
+    x, _, _ = mess_step(x, problem, rng, M=M, use_lp=True, distance_metric='angular')
+    #  x, _, _ = mess_step(x, problem, rng, M=M, use_lp=True, distance_metric='euclidean')
+
 ```
+
+---
+
+## References
+
+- Glatt-Holtz, Nathan E., Andrew J. Holbrook, Justin A. Krometis, and Cecilia F. Mondaini. 2024. "Parallel MCMC Algorithms: Theoretical Foundations, Algorithm Design, Case Studies." Transactions of Mathematics and Its Applications 8 (2): tnae004. https://academic.oup.com/imatrm/article/8/2/tnae004/7738435.
+- Senn, Guillermina, Matt Walker, and Haakon Tjelmeland. 2025. "Scalable Bayesian seismic wavelet estimation." Geophysical Prospecting. https://onlinelibrary.wiley.com/doi/full/10.1111/1365-2478.70026.
+- Senn, Guillermina, Hakon Tjelmeland, Nathan E. Glatt-Holtz, Matt Walker, and Andrew J. Holbrook. 2026. "Bayesian Semi-Blind Deconvolution at Scale." arXiv preprint. https://arxiv.org/pdf/2601.09677.
