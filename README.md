@@ -2,7 +2,7 @@
 
 # MESS: Multiproposal Elliptical Slice Sampling
 
-This repository implements Elliptical Slice Sampling (ESS) and its multiproposal generalization (MESS) for Bayesian inference in models with Gaussian priors. It accompanies the pre-print [Multiproposal Elliptical Slice Sampling](https://arxiv.org/abs/2602.22358) by Senn et al. (2026).
+This repository implements Elliptical Slice Sampling (ESS) and its multiproposal generalization (MESS) for Bayesian inference in models with Gaussian priors. It accompanies the pre-print [Multiproposal Elliptical Slice Sampling](https://arxiv.org/abs/2602.22358).
 
 ---
 
@@ -94,6 +94,7 @@ problem = GaussianProcessRegression(
 
 x = data["f_init"]
 rng = np.random.default_rng(0)
+M = 5 # Choose nr of proposals
 
 # To run ESS (MESS with M=1)
 for _ in range(1000):
@@ -115,5 +116,6 @@ for _ in range(1000):
 ## References
 
 - Glatt-Holtz, Nathan E., Andrew J. Holbrook, Justin A. Krometis, and Cecilia F. Mondaini. 2024. "Parallel MCMC Algorithms: Theoretical Foundations, Algorithm Design, Case Studies." Transactions of Mathematics and Its Applications 8 (2): tnae004. https://academic.oup.com/imatrm/article/8/2/tnae004/7738435.
+- Murray, Iain, Ryan Prescott Adams, and David J. C. MacKay. 2010. "Elliptical slice sampling." arXiv preprint. https://arxiv.org/abs/1001.0175.
 - Senn, Guillermina, Matt Walker, and Haakon Tjelmeland. 2025. "Scalable Bayesian seismic wavelet estimation." Geophysical Prospecting. https://onlinelibrary.wiley.com/doi/full/10.1111/1365-2478.70026.
 - Senn, Guillermina, Hakon Tjelmeland, Nathan E. Glatt-Holtz, Matt Walker, and Andrew J. Holbrook. 2026. "Bayesian Semi-Blind Deconvolution at Scale." arXiv preprint. https://arxiv.org/pdf/2601.09677.
